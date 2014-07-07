@@ -1,0 +1,111 @@
+@idcolor: rgb(84, 170, 213);
+@id-gradient: rgb(118, 204, 255);
+@subcolor: rgb(245,245,245);
+
+.topic, #btnAddTopic, #titleTopicList {
+    display: inline-block;
+    line-height: 25px;
+    font-size: 12px;
+    padding: 0 10px;
+    color: #464646;
+    border: 1px solid #c8c8c8;
+    margin: 0 3px 3px 0;
+    cursor: pointer;
+}
+.primary_topic {
+    display: inline-block;
+    line-height: 25px;
+    font-size: 12px;
+    padding: 0 10px;
+    color: #464646;
+    border: 1px solid @idcolor;
+    margin: 0 3px 3px 0;
+    cursor: default;
+}
+#titleTopicList{
+    margin-bottom: 5px;
+    background-color: @idcolor;
+    border: 1px solid @idcolor;
+    color: white;
+    cursor: default;
+}
+
+#btnAddTopic:hover {
+    background-color: rgb(245,245,245);
+}
+
+#topicLayer {
+    display: none;
+    position: absolute;
+    z-index: 100;
+    background-color: white;
+    border: 1px solid #c8c8c8;
+    top: 60px;
+    left: 50%;
+    margin: 0 0 0 -200px;
+    width: 400px;
+    height: 260px;
+    
+    .topic_pane {
+       border: 1px solid #c8c8c8;
+       height: 200px;
+       width: 185px;
+       overflow: auto;
+       margin: 9px 9px 5px 9px;
+       .topic1, .topic2 {
+           font-size: 13px;
+           line-height: 15px;
+           padding: 5px;
+           cursor: pointer;
+       }
+       .topic1:hover, .topic2:hover {
+           background-color: rgb(245,245,245);
+       }
+       .topic1.selected, .topic2.selected {
+           background-color: @idcolor;
+           color: white;
+       }
+    }
+    
+    #topicLeft {
+        float: left;
+        margin-right: 0;
+    }
+    
+    #topicRight {
+        float: right;
+        margin-left: 0;
+    }
+    
+    .empty_div {
+        clear: both;
+    }
+    #topicBtnArea {
+        margin: 5px 9px 9px 0;
+        display: inline-block;
+        float: right;
+        .topic_btn {
+            display: inline-block;
+            font-size: 14px;
+            line-height: 30px;
+            width: 88px;
+            text-align: center;
+            cursor: pointer;
+        }
+        #btnAdd {
+            background-color: @idcolor;
+            border: 1px solid @idcolor;
+            color: white;
+        }
+        #btnAdd:hover {
+            background-color: @idcolor*1.1;
+        }
+        #btnTopicLayerClose {
+            border: 1px solid #c8c8c8;
+            color: rgb(80,80,80);
+        }
+        #btnTopicLayerClose:hover {
+            background-color: rgb(245,245,245);
+        }
+    }
+}

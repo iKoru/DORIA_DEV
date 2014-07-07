@@ -36,20 +36,17 @@
 	<div class="gnb_dummy"> </div>
 	<div class="body main"|cond="$layout_info->LAYOUT_TYPE=='MAIN_PAGE'" class="body sub"|cond="$layout_info->LAYOUT_TYPE=='SUB_PAGE'">
 		<!-- LNB -->
+		<!--{print_r($GNB);}-->
 		<nav class="lnb" cond="$layout_info->LAYOUT_TYPE !== 'MAIN_PAGE'">
-			<ul loop="$GNB->list=>$key1,$val1" cond="$val1['selected'] && $val1['list']">
-				<li loop="$val1['list']=>$key2,$val2" cond="$val2['selected']" class="active"|cond="$val2['selected']"><a href="{$val2['href']}" target="_blank"|cond="$val2['open_window']=='Y'">{$val2['link']}</a>
-					<ul cond="$val2['list']">
-						<div id="menu_change" cond="$val2['menu_name_key']=='대학'">
-						  <div id="to_univ" class="btn_menu_change">대학</div>
-						  <div id="to_college" class="btn_menu_change">단과대</div>
-						  <div class="clear_both">
-						  </div>
-						</div>
-						<li loop="$val2['list']=>$key3,$val3" class="active"|cond="$val3['selected']" type="college_menu"|cond="substr($val3['link'],0,1)=='*'" ><a href="{$val3['href']}" target="_blank"|cond="$val3['open_window']=='Y'"><!--@if(substr($val3['link'],0,1)=='*')-->{substr($val3['link'],1)}<!--@else-->{$val3['link']}<!--@end--></a>
+			<ul loop="$GNB->list=>$key1,$val1" cond="$val1['selected'] && $val1['list']"> <!--대학, 공부, 라이프-->
+				<div id="menu_change" cond="$val1['menu_name_key']=='대학'">
+				  <div id="to_univ" class="btn_menu_change">대학</div>
+				  <div id="to_college" class="btn_menu_change">단과대</div>
+				  <div class="clear_both">
+				  </div>
+				</div>
+						<li loop="$val1['list']=>$key2,$val2" class="active"|cond="$val2['selected']" type="college_menu"|cond="substr($val2['link'],0,1)=='*'" ><a href="{$val2['href']}" target="_blank"|cond="$val2['open_window']=='Y'"><!--@if(substr($val2['link'],0,1)=='*')-->{substr($val2['link'],1)}<!--@else-->{$val2['link']}<!--@end--></a>
 						</li>
-					</ul>
-				</li>
 			</ul>
 		</nav>
 		<!-- /LNB -->
@@ -64,3 +61,30 @@
 	<p cond="!$layout_info->FOOTER">Powered by <a href="http://xpressengine.com/">XE</a>.</p>
 	<p cond="$layout_info->FOOTER">{$layout_info->FOOTER}</p>
 </footer>
+<script type="text/javascript">
+    jQuery(function($){
+        $(document).ready(function(){
+            if($('.lnb ul li .active').attr('type')=="college_menu") {
+                $('#to_univ').addClass('menu_not_selected');
+                $('.lnb ul li').hide();
+                $('.lnb ul li[type="college_menu"]').show();
+            }
+            else {
+                $('#to_college').addClass('menu_not_selected');
+                $('.lnb ul li[type="college_menu"').hide();
+            }
+        });
+        $('#to_univ').click(function(){
+            $(this).removeClass('menu_not_selected');
+            $('#to_college').addClass('menu_not_selected');
+            $('.lnb ul li').show('fast');
+            $('.lnb ul li[type="college_menu"]').hide();
+        });
+        $('#to_college').click(function(){
+            $(this).removeClass('menu_not_selected');
+            $('#to_univ').addClass('menu_not_selected');
+            $('.lnb ul li').hide();
+            $('.lnb ul li[type="college_menu"]').show('fast');
+        });
+    });
+</script>

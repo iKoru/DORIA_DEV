@@ -306,6 +306,7 @@ class boardView extends board
 				}
 			}
 		}
+		 
 
 		// setup the document oject on context
 		$oDocument->add('module_srl', $this->module_srl);
@@ -646,6 +647,96 @@ class boardView extends board
 
 		$this->setTemplateFile('write_form');
 	}
+
+	/*
+	 * Add By Soochan
+	 * @brief	Doria Application Form
+	 */
+	function dispBoardApply() {
+				// check grant
+		if(!$this->grant->apply)
+		{
+			return $this->dispBoardMessage('msg_not_permitted');
+		}
+		$oDocumentModel = getModel('document');
+		$logged_info = Context::get('logged_info');
+		$module_info = Context::get('module_info');
+		// 유저가 쓴 신청서가 있는지 검색
+		$title = "Application " . $logged_info->user_id;
+		$doc_srl = $oDocumentModel->getDocumentSrlByTitle($module_info->module_srl, $title);
+		
+		if($doc_srl) {
+			Context::set('document_srl', $doc_srl);
+		}
+		else if(Context::get('document_srl') && Context::get('document_srl')!=$doc_srl) {
+			return $this->dispBoardMessage('msg_not_permitted');
+		}
+		
+		// GET parameter document_srl from request
+		$document_srl = Context::get('document_srl');
+		$oDocument = $oDocumentModel->getDocument(0, $this->grant->manager);
+		$oDocument->setDocument($document_srl);
+
+		if($oDocument->get('module_srl') == $oDocument->get('member_srl')) $savedDoc = FALSE; //TRUE;
+		$oDocument->add('module_srl', $this->module_srl);
+
+		if($oDocument->isExists() && $this->module_info->protect_content=="Y" && $oDocument->get('comment_count')>0 && $this->grant->manager==false)
+		{
+			return new Object(-1, 'msg_protect_content');
+		}
+
+		// if the document is not granted, then back to the password input form
+		$oModuleModel = getModel('module');
+		if($oDocument->isExists()&&!$oDocument->isGranted())
+		{
+			return $this->setTemplateFile('input_password_form');
+		}
+
+		if(!$oDocument->isExists())
+		{
+			$point_config = $oModuleModel->getModulePartConfig('point',$this->module_srl);
+			$logged_info = Context::get('logged_info');
+			$oPointModel = getModel('point');
+			$pointForInsert = $point_config["insert_document"];
+			if($pointForInsert < 0)
+			{
+				if( !$logged_info )
+				{
+					return $this->dispBoardMessage('msg_not_permitted');
+				}
+				else if (($oPointModel->getPoint($logged_info->member_srl) + $pointForInsert )< 0 )
+				{
+					return $this->dispBoardMessage('msg_not_enough_point');
+				}
+			}
+		}
+		if(!$oDocument->get('status')) $oDocument->add('status', $oDocumentModel->getDefaultStatus());
+
+		$statusList = $this->_getStatusNameList($oDocumentModel);
+		if(count($statusList) > 0) Context::set('status_list', $statusList);
+
+		// get Document status config value
+		Context::set('document_srl',$document_srl);
+		Context::set('oDocument', $oDocument);
+
+		// apply xml_js_filter on header
+		$oDocumentController = getController('document');
+		$oDocumentController->addXmlJsFilter($this->module_info->module_srl);
+
+		// if the document exists, then setup extra variabels on context
+		if($oDocument->isExists() && !$savedDoc) Context::set('extra_keys', $oDocument->getExtraVars());
+
+		/**
+		 * add JS filters
+		 **/
+		Context::addJsFilter($this->module_path.'tpl/filter', 'apply.xml');
+
+		$oSecurity = new Security();
+		$oSecurity->encodeHTML('category_list.text', 'category_list.title');
+
+		$this->setTemplateFile('write_form');
+	}
+	
 
 	function _getStatusNameList(&$oDocumentModel)
 	{

@@ -1,0 +1,147 @@
+<load target="css/_section_select.css" />
+<input type="hidden" name="sections" id="sections" value="@{$module_info->module_srl}#{$current_category}"/>
+<div id="topicList">
+    <span id="titleTopicList">토픽 목록</span>
+    <div id="btnAddTopic" onclick="showTopicLayer();">토픽 추가</div>
+</div>
+
+<div id="topicLayer">
+    <div id="topicLeft" class="topic_pane">
+        <div loop="$sections => $val" class="topic1" value="{$val->module_srl}" onclick="setTopicList('{$val->module_srl}');">{$val->name}</div>
+    </div>
+    <div id="topicRight" class="topic_pane">
+        <!--각 대학별 하위카테고리 묶음-->
+        <div loop="$sections => $val1" class="topic2_set" id="{'topic2_'.$val1->module_srl}">
+            <div class="topic2" value="">전체</div>
+            <!--하위 카테고리 리스트-->
+            <div loop="$val1->categories => $val2" class="topic2" value="{$val2->category_srl}">{$val2->title}</div>
+        </div>
+    </div>
+    <div class="empty_div"></div>
+    <div id="topicBtnArea">
+        <div id="btnAdd" class="topic_btn" onclick="addTopic()">추가</div>
+        <div id="btnTopicLayerClose" class="topic_btn">닫기</div>
+    </div>
+</div>
+
+<!--Javascript로 제어하기 위해 php의 stdClass Object를 DOM Object로 변환-->
+<div id="sectionList" style="display: none">
+    <div loop="$sections => $univ" class="univ" value="{$univ->module_srl}">
+        <div class="univ_name" value="{$univ->name}"></div>
+        <div class="univ_category">
+            <div loop="$univ->categories => $cats" value="{$cats->category_srl}">
+                <div class="category_name" value="{$cats->title}"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+// <![CDATA[
+    jQuery(function($){
+        $(document).ready(function(){
+            displaySections();
+        });
+    });
+    
+    function showTopicLayer() {
+        jQuery(function($){
+            // 초기화
+            $(".topic2_set").hide();
+            $('.topic1').removeClass('selected');
+            $('#topicLeft').attr('value', '');
+            $('#topicRight').attr('value', '');
+            
+            $("#topicLayer").show('fast');
+            $('#btnTopicLayerClose').click(function(){
+                $('#topicLayer').hide('fast');
+            });
+            $('.topic1').click(function(){
+                $('.topic1').removeClass('selected');
+                $('.topic2').removeClass('selected');
+                $(this).addClass('selected');
+                $('#topicLeft').attr('value', $(this).attr('value'));
+                $('#topicRight').attr('value', null);
+            });
+            $('.topic2').click(function(){
+                $('.topic2').removeClass('selected');
+                $(this).addClass('selected');
+                $('#topicRight').attr('value', $(this).attr('value'));
+            });
+        });
+    }
+    
+    // 토픽 레이어에서 하위 카테고리 리스트를 바꿔주는 함수
+    function setTopicList(module_srl) {
+        jQuery(function($){
+            $(".topic2_set").hide();
+            $("#topic2_"+module_srl).show();
+        });
+    }
+    function addTopic() {
+        // 선택된 토픽 정보
+        var selectedTopic = '@'+document.getElementById('topicLeft').value+'#';
+        if(document.getElementById('topicRight').value != "") selectedTopic += document.getElementById('topicRight').value+'%';
+        // 입력되어있는 토픽 정보
+        var sections = document.getElementById('sections').value;
+        
+        // 만약 중복 등록이라면 레이어 닫고 종료
+        if(sections.indexOf(selectedTopic) != -1) {
+            jQuery(function($){$('#topicLayer').hide('fast');});
+            return;
+        }
+        else {
+            sections += selectedTopic;
+            document.getElementById('sections').value = sections;
+            jQuery(function($){$('#topicLayer').hide('fast');});
+            displaySections();
+            return;
+        }
+    }
+    
+    // 섹션 인풋에 저장된 토픽들을 나열해주는 함수
+    function displaySections() {jQuery(function($){
+        var sections = document.getElementById('sections').value;
+        // sections = "@123#456%@123#456%..."
+        sectionArr = sections.split('@');
+        sectionArr.shift();
+        // sectionArr = ['123#456%', '234#567%',...]
+        $('.topic').remove();
+        $('.primary_topic').remove();
+        for(var i in sectionArr) {
+            var section = sectionArr[i].split('#');
+            section[1] = section[1].substring(0, section[1].length-1);
+            // section = Array('123', '456')
+            
+            var univ_name = $("#sectionList div[value='"+section[0]+"'] div:first-child").attr('value');
+            if(section[1]) {
+                var category_name = $("#sectionList div[value='"+section[0]+"'] div:last-child div[value='"+section[1]+"'] div").attr('value');
+                var node = "<div class='topic' value='@"+sectionArr[i]+"'>"+univ_name+" "+category_name+"</div>";
+            }
+            else var node = "<div class='topic' value='@"+sectionArr[i]+"'>"+univ_name+"</div>";
+            $('#btnAddTopic').before(node);
+        }
+        $('.topic:first').addClass('primary_topic');
+        $('.topic:first').removeClass('topic');
+        $('.topic').mouseenter(function(){
+            $(this).fadeTo('fast', 0.5);
+        });
+        $('.topic').mouseleave(function() {
+            $(this).fadeTo('fast', 1);
+        });
+        $('.topic').click(function(){
+            if($(this)==$('.topic:first-child')) return;
+            $(this).hide('fast');
+            var key = $(this).attr('value')
+            if((sections.indexOf(key+'@') != -1) || (key.indexOf('#') != -1)) {
+                var newSections = sections.replace(key, "");
+                $('#sections').attr('value', newSections);
+            }
+            else if(sections.length == sections.lastIndexOf(key)+key.length) {
+                var newSections = sections.replace(key, "");
+                $('#sections').attr('value', newSections);
+            }
+            displaySections();
+        });
+    });}
+// ]]>
+</script>

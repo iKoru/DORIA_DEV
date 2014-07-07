@@ -158,6 +158,12 @@
 			</div>
 		</div>
 		<div class="x_control-group">
+            <label class="x_control-label" for="sections">토픽</label>
+            <div class="x_controls">
+                <input type="text" name="sections" id="sections" value="{$module_info->sections}" style="width:80px" />
+            </div>
+		</div>
+		<div class="x_control-group">
 			<label class="x_control-label">{$lang->except_notice}</label>
 			<div class="x_controls">
 				<label class="x_inline" for="except_notice"><input type="checkbox" name="except_notice" id="except_notice" value="Y" checked="checked"|cond="$module_info->except_notice != 'N'" /> {$lang->about_except_notice}</label>
@@ -173,12 +179,6 @@
 			<label class="x_control-label">{$lang->consultation}</label>
 			<div class="x_controls">
 				<label class="x_inline" for="consultation"><input type="checkbox" name="consultation" id="consultation" value="Y" checked="checked"|cond="$module_info->consultation == 'Y'" /> {$lang->about_consultation}</label>
-			</div>
-		</div>
-<div class="x_control-group">
-			<label class="x_control-label">{$lang->protect_content}</label>
-			<div class="x_controls">
-				<label class="x_inline" for="protect_content"><input type="checkbox" name="protect_content" id="protect_content" value="Y" checked="checked"|cond="$module_info->protect_content == 'Y'" /> {$lang->about_protect_content}</label>
 			</div>
 		</div>
 		<div class="x_control-group">

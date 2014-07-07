@@ -43,27 +43,23 @@ if($__Context->val1['url']!='home'){ ?><li<?php if($__Context->val1['selected'])
 	<div<?php if($__Context->layout_info->LAYOUT_TYPE=='MAIN_PAGE'){ ?> class="body main"<?php };
 if($__Context->layout_info->LAYOUT_TYPE=='SUB_PAGE'){ ?> class="body sub"<?php } ?>>
 		<!-- LNB -->
+		<!--<?php echo print_r($__Context->GNB); ?>-->
 		<?php if($__Context->layout_info->LAYOUT_TYPE !== 'MAIN_PAGE'){ ?><nav class="lnb">
 			<?php if($__Context->GNB->list&&count($__Context->GNB->list))foreach($__Context->GNB->list as $__Context->key1=>$__Context->val1){;
-if($__Context->val1['selected'] && $__Context->val1['list']){ ?><ul>
-				<?php if($__Context->val1['list']&&count($__Context->val1['list']))foreach($__Context->val1['list'] as $__Context->key2=>$__Context->val2){;
-if($__Context->val2['selected']){ ?><li<?php if($__Context->val2['selected']){ ?> class="active"<?php } ?>><a href="<?php echo $__Context->val2['href'] ?>"<?php if($__Context->val2['open_window']=='Y'){ ?> target="_blank"<?php } ?>><?php echo $__Context->val2['link'] ?></a>
-					<?php if($__Context->val2['list']){ ?><ul>
-						<?php if($__Context->val2['menu_name_key']=='대학'){ ?><div id="menu_change">
-						  <div id="to_univ" class="btn_menu_change">대학</div>
-						  <div id="to_college" class="btn_menu_change">단과대</div>
-						  <div class="clear_both">
-						  </div>
-						</div><?php } ?>
-						<?php if($__Context->val2['list']&&count($__Context->val2['list']))foreach($__Context->val2['list'] as $__Context->key3=>$__Context->val3){ ?><li<?php if($__Context->val3['selected']){ ?> class="active"<?php };
-if(substr($__Context->val3['link'],0,1)=='*'){ ?> type="college_menu"<?php } ?> ><a href="<?php echo $__Context->val3['href'] ?>"<?php if($__Context->val3['open_window']=='Y'){ ?> target="_blank"<?php } ?>><?php if(substr($__Context->val3['link'],0,1)=='*'){;
-echo substr($__Context->val3['link'],1);
+if($__Context->val1['selected'] && $__Context->val1['list']){ ?><ul> <!--대학, 공부, 라이프-->
+				<?php if($__Context->val1['menu_name_key']=='대학'){ ?><div id="menu_change">
+				  <div id="to_univ" class="btn_menu_change">대학</div>
+				  <div id="to_college" class="btn_menu_change">단과대</div>
+				  <div class="clear_both">
+				  </div>
+				</div><?php } ?>
+						<?php if($__Context->val1['list']&&count($__Context->val1['list']))foreach($__Context->val1['list'] as $__Context->key2=>$__Context->val2){ ?><li<?php if($__Context->val2['selected']){ ?> class="active"<?php };
+if(substr($__Context->val2['link'],0,1)=='*'){ ?> type="college_menu"<?php } ?> ><a href="<?php echo $__Context->val2['href'] ?>"<?php if($__Context->val2['open_window']=='Y'){ ?> target="_blank"<?php } ?>><?php if(substr($__Context->val2['link'],0,1)=='*'){;
+echo substr($__Context->val2['link'],1);
 }else{;
-echo $__Context->val3['link'];
+echo $__Context->val2['link'];
 } ?></a>
 						</li><?php } ?>
-					</ul><?php } ?>
-				</li><?php }} ?>
 			</ul><?php }} ?>
 		</nav><?php } ?>
 		<!-- /LNB -->
@@ -78,3 +74,30 @@ echo $__Context->val3['link'];
 	<?php if(!$__Context->layout_info->FOOTER){ ?><p>Powered by <a href="http://xpressengine.com/">XE</a>.</p><?php } ?>
 	<?php if($__Context->layout_info->FOOTER){ ?><p><?php echo $__Context->layout_info->FOOTER ?></p><?php } ?>
 </footer>
+<script type="text/javascript">
+    jQuery(function($){
+        $(document).ready(function(){
+            if($('.lnb ul li .active').attr('type')=="college_menu") {
+                $('#to_univ').addClass('menu_not_selected');
+                $('.lnb ul li').hide();
+                $('.lnb ul li[type="college_menu"]').show();
+            }
+            else {
+                $('#to_college').addClass('menu_not_selected');
+                $('.lnb ul li[type="college_menu"').hide();
+            }
+        });
+        $('#to_univ').click(function(){
+            $(this).removeClass('menu_not_selected');
+            $('#to_college').addClass('menu_not_selected');
+            $('.lnb ul li').show('fast');
+            $('.lnb ul li[type="college_menu"]').hide();
+        });
+        $('#to_college').click(function(){
+            $(this).removeClass('menu_not_selected');
+            $('#to_univ').addClass('menu_not_selected');
+            $('.lnb ul li').hide();
+            $('.lnb ul li[type="college_menu"]').show('fast');
+        });
+    });
+</script>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<skin version="0.2">
+    <title xml:lang="ko">Doria Application</title>
+    <description xml:lang="ko">Doria Application 프로그램 신청서 전용 게시판</description>
+    <version>1.0</version>
+    <date>2014-06-30</date>
+    <author email_address="lsc2687@snu.ac.kr" link="http://doria.co.kr/">
+        <name xml:lang="ko">이수찬</name>
+    </author>
+</skin>
+

@@ -1,0 +1,33 @@
+<include target="_header.html" />
+<form action="./" method="post" onsubmit="return procFilter(this, window.insert)" class="board_write">
+	<input type="hidden" name="mid" value="{$mid}" />
+	<input type="hidden" name="content" value="{$oDocument->getContentText()}" />
+	<input type="hidden" name="document_srl" value="{$document_srl}" />
+	<div class="write_header">
+		<input type="hidden" name="title" class="iText" title="{$lang->title}" value="Application {$logged_info->user_id}" />
+		<input cond="$grant->manager" type="checkbox" name="is_notice" value="Y" class="iCheck" checked="checked"|cond="$oDocument->isNotice()" id="is_notice" />
+		<label cond="$grant->manager" for="is_notice">{$lang->notice}</label>
+	</div>
+	<h3>참가 신청서</h3>
+    <div class="exForm" cond="count($extra_keys)">
+		<table cond="count($extra_keys)" border="1" cellspacing="0" summary="Extra Form">
+			<caption><em>*</em> : {$lang->is_required}</caption>
+			<tr loop="$extra_keys=>$key,$val">
+				<td><em cond="$val->is_required=='Y'">*</em></td><th scope="row">{$val->name}</th>
+				<td>{$val->getFormHTML()}</td>
+			</tr>
+			<tr>
+				<td> </td><th colspan="2">자기소개서</th>
+			</tr>
+		</table>
+	</div>
+    <div class="write_editor">
+		{$oDocument->getEditor()}
+	</div>
+	<div class="write_footer">
+		<div class="btnArea">
+			<input type="submit" value="{$lang->cmd_registration}" class="doria_btn" />
+		</div>
+	</div>
+</form>
+<include target="_footer.html" />
