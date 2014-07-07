@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<skin version="0.2">
+    <title xml:lang="ko">doria_application</title>
+    <title xml:lang="en">doria_application</title>
+    <version>1.0</version>
+    <date>2014-06-30</date>
+    <author email_address="lsc2687@snu.ac.kr">
+        <name xml:lang="ko">Soochan Lee</name>
+        <name xml:lang="en">Soochan Lee</name>
+    </author>
+</skin>
